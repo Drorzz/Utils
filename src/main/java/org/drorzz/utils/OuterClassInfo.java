@@ -13,14 +13,15 @@ public class OuterClassInfo {
 		}
 	}
 
+	private final static int MIN_DEPTH = 2;
 	private final static int MAX_DEPTH = 3;
-	private final static Method nativeStackTraceElementMethod = initNativeStackTraceElementMethod();
+	private final static Method nativeGetStackTraceElementMethod = initNativeStackTraceElementMethod();
 
-	private static Method initNativeStackTraceElementMethod(){
+	private static Method getSuperclassDeclaredMethod(String name,  Class<?>... parameterTypes){
 		Method method;
 		try {
 
-			method = EmptyStackTraceThrowable.class.getSuperclass().getDeclaredMethod("getStackTraceElement", int.class);
+			method = EmptyStackTraceThrowable.class.getSuperclass().getDeclaredMethod(name,parameterTypes);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
@@ -28,19 +29,23 @@ public class OuterClassInfo {
 		return method;
 	}
 
+	private static Method initNativeStackTraceElementMethod(){
+		return getSuperclassDeclaredMethod("getStackTraceElement", int.class);
+	}
+
 	private static StackTraceElement getStackTraceElement(Throwable exception,int index) {
 		try {
-			return (StackTraceElement)nativeStackTraceElementMethod.invoke(exception,index);
+			return (StackTraceElement) nativeGetStackTraceElementMethod.invoke(exception,index);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-    private static StackTraceElement getClassInformer(){
+	private static StackTraceElement getClassInformer(){
 	    EmptyStackTraceThrowable emptyThrowable = new EmptyStackTraceThrowable();
         String className = OuterClassInfo.class.getName();
 	    StackTraceElement element;
-	    for(int i = 2; i <= MAX_DEPTH; i++){
+	    for(int i = MIN_DEPTH; i <= MAX_DEPTH; i++){
 		    element = getStackTraceElement(emptyThrowable,i);
             if(!className.equals(element.getClassName())){
 //	            System.out.println(i);

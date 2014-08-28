@@ -13,7 +13,7 @@ import org.junit.Test;
 public class OuterClassInfoSpeedTest {
     private String testName = "";
     private long time = 0;
-    private final int cyclesNumber = 100000;
+    private final int cyclesNumber = 1000000;
 
     @Before
     public void startTimer(){
