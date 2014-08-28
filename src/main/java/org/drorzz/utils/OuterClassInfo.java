@@ -42,11 +42,11 @@ public class OuterClassInfo {
 	}
 
 	private static StackTraceElement getClassInformer(){
-	    EmptyStackTraceThrowable emptyThrowable = new EmptyStackTraceThrowable();
+	    EmptyStackTraceThrowable throwable = new EmptyStackTraceThrowable();
         String className = OuterClassInfo.class.getName();
 	    StackTraceElement element;
 	    for(int i = MIN_DEPTH; i <= MAX_DEPTH; i++){
-		    element = getStackTraceElement(emptyThrowable,i);
+		    element = getStackTraceElement(throwable,i);
             if(!className.equals(element.getClassName())){
 //	            System.out.println(i);
 	            return element;

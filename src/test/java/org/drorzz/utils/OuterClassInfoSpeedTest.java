@@ -1,9 +1,6 @@
 package org.drorzz.utils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Drorzz
@@ -15,7 +12,7 @@ public class OuterClassInfoSpeedTest {
     private long time = 0;
     private final int cyclesNumber = 1000_000;
 
-    @Before
+	@Before
     public void startTimer(){
         time = System.currentTimeMillis();
     }
