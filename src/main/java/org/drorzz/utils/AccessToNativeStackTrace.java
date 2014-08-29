@@ -7,11 +7,18 @@ import java.lang.reflect.Method;
  * @author Drorzz
  * @since  29.08.14.
  */
-public class AccessToNativeStackTrace extends Throwable{
+public class AccessToNativeStackTrace {
 	private static Method nativeGetStackTraceElementMethod;
 	private static Method nativeGetStackTraceDepthMethod;
 
+	private Throwable emptyThrowable;
+
+	private class EmptyThrowable extends Throwable{
+		private EmptyThrowable() { }
+	}
+
 	public AccessToNativeStackTrace() {
+		this.emptyThrowable = new EmptyThrowable();
 	}
 
 	private static Method getSuperclassDeclaredMethod(String name,  Class<?>... parameterTypes){
@@ -36,32 +43,33 @@ public class AccessToNativeStackTrace extends Throwable{
 
 	private static Method getNativeGetStackTraceElementMethod(){
 		if(nativeGetStackTraceElementMethod == null){
-			nativeGetStackTraceElementMethod = initNativeStackTraceElementMethod();
+				nativeGetStackTraceElementMethod = initNativeStackTraceElementMethod();
 		}
 		return nativeGetStackTraceElementMethod;
 	}
 
 	private static Method getNativeGetStackTraceDepthMethod(){
 		if(nativeGetStackTraceDepthMethod == null){
-			nativeGetStackTraceDepthMethod = initNativeGetStackTraceDepthMethod();
+				nativeGetStackTraceDepthMethod = initNativeGetStackTraceDepthMethod();
 		}
 		return nativeGetStackTraceDepthMethod;
 	}
 
+	@SuppressWarnings("unchecked")
 	private <E> E invokeNativeMethod(Method method, Object... args){
 		try {
-			return (E) method.invoke(this,args);
+			return (E) method.invoke(emptyThrowable,args);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public StackTraceElement getStackTraceElement(int index) {
-		return invokeNativeMethod(getNativeGetStackTraceElementMethod(),index);
+		return invokeNativeMethod(getNativeGetStackTraceElementMethod(),index + 1);
 	}
 
 	public int getStackTraceDepth() {
-		return invokeNativeMethod(getNativeGetStackTraceDepthMethod());
+		return (int)invokeNativeMethod(getNativeGetStackTraceDepthMethod()) - 1;
 	}
 }
 

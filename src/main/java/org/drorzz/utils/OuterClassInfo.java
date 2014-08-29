@@ -16,7 +16,6 @@ public class OuterClassInfo {
 	    for(int i = MIN_DEPTH; i <= MAX_DEPTH; i++){
 		    element = throwable.getStackTraceElement(i);
             if(!className.equals(element.getClassName())){
-//	            System.out.println(i);
 	            return element;
             }
         }
