@@ -1,21 +1,18 @@
 package org.drorzz.utils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author Drorzz
- * @since 28.08.2014.
+ * @since 28.08.14.
  */
 @Ignore
 public class OuterClassInfoSpeedTest {
     private String testName = "";
     private long time = 0;
-    private final int cyclesNumber = 100000;
+    private final int cyclesNumber = 1000_000;
 
-    @Before
+	@Before
     public void startTimer(){
         time = System.currentTimeMillis();
     }
@@ -51,12 +48,20 @@ public class OuterClassInfoSpeedTest {
         }
     }
 
-    @Test
-    public void getClassNameTest() {
-        testName = "Class name";
-        for(int i=0; i < cyclesNumber; i++){
-            OuterClassInfo.getClassName();
-        }
-    }
+	@Test
+	public void getClassNameTest() {
+		testName = "Class name";
+		for(int i=0; i < cyclesNumber; i++){
+			OuterClassInfo.getClassName();
+		}
+	}
+
+	@Test
+	public void getOuterClassTest() {
+		testName = "Class";
+		for(int i=0; i < cyclesNumber; i++){
+			OuterClassInfo.getOuterClass();
+		}
+	}
 
 }

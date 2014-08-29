@@ -2,11 +2,11 @@ package org.drorzz.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Drorzz
- * @since 28.08.2014.
+ * @since 28.08.14.
  */
 public class OuterClassInfoTest {
     class TestClass{
@@ -25,15 +25,29 @@ public class OuterClassInfoTest {
         public String getClassName() {
             return OuterClassInfo.getClassName();
         }
+
+	    public Class<?> getOuterClass() {
+		    return OuterClassInfo.getOuterClass();
+	    }
+
     }
 
     @Test
     public void testAll() {
+	    String fileName = OuterClassInfoTest.class.getSimpleName().concat(".java");
+
+	    assertEquals("FileName",    fileName,                           OuterClassInfo.getFileName());
+	    assertEquals("ClassName",   OuterClassInfoTest.class.getName(), OuterClassInfo.getClassName());
+	    assertEquals("ClassName",   "OuterClassInfoTest",               OuterClassInfo.getShortClassName());
+	    assertEquals("MethodName",  "testAll",                    OuterClassInfo.getMethodName());
+	    assertEquals("Class",       OuterClassInfoTest.class,           OuterClassInfo.getOuterClass());
+
         TestClass testClass = new TestClass();
 
-        assertEquals("FileName","OuterClassInfoTest.java",testClass.getFileName());
-        assertEquals("ClassName",TestClass.class.getName(),testClass.getClassName());
-        assertEquals("ClassName","OuterClassInfoTest$TestClass",testClass.getShortClassName());
-        assertEquals("MethodName","getMethodName",testClass.getMethodName());
+        assertEquals("Inner-FileName",    fileName,                       testClass.getFileName());
+        assertEquals("Inner-ClassName",   TestClass.class.getName(),      testClass.getClassName());
+        assertEquals("Inner-ClassName",   "OuterClassInfoTest$TestClass", testClass.getShortClassName());
+	    assertEquals("Inner-MethodName",  "getMethodName",                testClass.getMethodName());
+	    assertEquals("Inner-Class",       TestClass.class,                testClass.getOuterClass());
     }
 }
