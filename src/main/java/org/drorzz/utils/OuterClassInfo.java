@@ -1,52 +1,20 @@
 package org.drorzz.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * @author Drorzz
- * @since 28.08.2014.
+ * @since 28.08.14.
  */
 public class OuterClassInfo {
-	private static class EmptyStackTraceThrowable extends Throwable{
-		public EmptyStackTraceThrowable() {
-		}
-	}
 
 	private final static int MIN_DEPTH = 2;
 	private final static int MAX_DEPTH = 3;
-	private final static Method nativeGetStackTraceElementMethod = initNativeStackTraceElementMethod();
-
-	private static Method getSuperclassDeclaredMethod(String name,  Class<?>... parameterTypes){
-		Method method;
-		try {
-
-			method = EmptyStackTraceThrowable.class.getSuperclass().getDeclaredMethod(name,parameterTypes);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
-		method.setAccessible(true);
-		return method;
-	}
-
-	private static Method initNativeStackTraceElementMethod(){
-		return getSuperclassDeclaredMethod("getStackTraceElement", int.class);
-	}
-
-	private static StackTraceElement getStackTraceElement(Throwable exception,int index) {
-		try {
-			return (StackTraceElement) nativeGetStackTraceElementMethod.invoke(exception,index);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	private static StackTraceElement getClassInformer(){
-	    EmptyStackTraceThrowable throwable = new EmptyStackTraceThrowable();
+	    AccessToNativeStackTrace throwable = new AccessToNativeStackTrace();
         String className = OuterClassInfo.class.getName();
 	    StackTraceElement element;
 	    for(int i = MIN_DEPTH; i <= MAX_DEPTH; i++){
-		    element = getStackTraceElement(throwable,i);
+		    element = throwable.getStackTraceElement(i);
             if(!className.equals(element.getClassName())){
 //	            System.out.println(i);
 	            return element;
@@ -76,5 +44,13 @@ public class OuterClassInfo {
     public static String getMethodName() {
         return getClassInformer().getMethodName();
     }
+
+	public static Class<?> getOuterClass(){
+		try {
+			return Class.forName(getClassName());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 

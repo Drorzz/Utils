@@ -4,7 +4,7 @@ import org.junit.*;
 
 /**
  * @author Drorzz
- * @since 28.08.2014.
+ * @since 28.08.14.
  */
 @Ignore
 public class OuterClassInfoSpeedTest {
@@ -48,12 +48,20 @@ public class OuterClassInfoSpeedTest {
         }
     }
 
-    @Test
-    public void getClassNameTest() {
-        testName = "Class name";
-        for(int i=0; i < cyclesNumber; i++){
-            OuterClassInfo.getClassName();
-        }
-    }
+	@Test
+	public void getClassNameTest() {
+		testName = "Class name";
+		for(int i=0; i < cyclesNumber; i++){
+			OuterClassInfo.getClassName();
+		}
+	}
+
+	@Test
+	public void getOuterClassTest() {
+		testName = "Class";
+		for(int i=0; i < cyclesNumber; i++){
+			OuterClassInfo.getOuterClass();
+		}
+	}
 
 }
